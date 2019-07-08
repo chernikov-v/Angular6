@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { IProduct } from '../../models/product.interface';
+import { IProduct } from '../../../models/product.interface'
 
 @Component({
   selector: 'app-list-item',
@@ -9,8 +9,7 @@ import { IProduct } from '../../models/product.interface';
 
 export class ListItemComponent implements OnInit {
   @Input() item: IProduct
-  constructor( item: IProduct ) { 
-    this.item = item;
+  constructor() {
   }
 
   ngOnInit() {
