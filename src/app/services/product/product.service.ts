@@ -30,4 +30,8 @@ export class ProductService {
     return this.getProducts().filter(({ id }) => _id === id)[0];
   }
 
+  addProduct(product: IProduct): IProduct{
+
+  } 
+
 }

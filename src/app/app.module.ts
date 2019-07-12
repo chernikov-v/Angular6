@@ -6,6 +6,10 @@ import { ListComponent } from './components/list/list.component';
 import { ListItemComponent } from './components/list/list-item/list-item.component';
 import { ProductComponent } from './components/product/product.component';
 import { MyRouteRoutes } from './my-route.routing';
+// import { StoreModule } from '@ngrx/store';
+// import { reducers, metaReducers } from './store/reducers';
+// import { EffectsModule } from '@ngrx/effects';
+// import { AppEffects } from './store/effects/app.effects';
 
 @NgModule({
    declarations: [
@@ -16,7 +20,9 @@ import { MyRouteRoutes } from './my-route.routing';
    ],
    imports: [
       BrowserModule,
-      MyRouteRoutes
+      MyRouteRoutes,
+    //   StoreModule.forRoot(reducers, { metaReducers }),
+    //   EffectsModule.forRoot([AppEffects])
    ],
    providers: [],
    bootstrap: [
