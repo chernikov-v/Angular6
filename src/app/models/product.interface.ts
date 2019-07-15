@@ -1,5 +1,10 @@
 export interface IProduct {
   id: number;
-  name: string;
-  description: string;
+  image?: string;
+  category?: string;
+  title: string;
+  description?: string;
+  qty?: number;
+  price?: number;
+  createdAt : Date; 
 }

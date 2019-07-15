@@ -6,6 +6,9 @@ import { ListComponent } from './components/list/list.component';
 import { ListItemComponent } from './components/list/list-item/list-item.component';
 import { ProductComponent } from './components/product/product.component';
 import { MyRouteRoutes } from './my-route.routing';
+import { FormsModule } from '@angular/forms';
+import { MomentModule } from 'ngx-moment';
+
 // import { StoreModule } from '@ngrx/store';
 // import { reducers, metaReducers } from './store/reducers';
 // import { EffectsModule } from '@ngrx/effects';
@@ -21,6 +24,8 @@ import { MyRouteRoutes } from './my-route.routing';
    imports: [
       BrowserModule,
       MyRouteRoutes,
+      FormsModule,
+      MomentModule
     //   StoreModule.forRoot(reducers, { metaReducers }),
     //   EffectsModule.forRoot([AppEffects])
    ],

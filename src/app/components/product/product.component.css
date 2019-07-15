@@ -1,0 +1,20 @@
+.product .product__err-msg{
+    color: red;
+    font-weight: bold;
+}
+
+.product__image{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+}
+
+.product__image img.card-img-top{
+   min-height: 0;
+   min-width: 0;
+   max-width: 100%;
+   max-height: 100%;
+   width: auto;
+   height: auto;
+}
