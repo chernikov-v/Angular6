@@ -40,18 +40,26 @@ export class ProductService {
         return PRODUCTS;
     }
 
-    getProduct(_id: number): IProduct {
-        return this.getProducts().filter(({ id }) => _id === id)[0];
+    getProduct(_id: number | string): IProduct {
+        let product = this.getProducts().filter(({ id }) => _id === id)[0];
+        debugger;
+        return product
     }
 
     addProduct(product: IProduct): IProduct {
-
-        PRODUCTS.push(
-            Object.assign(copy(product), {
-                id: guid(),
-                createdAt: new Date,
-            })
-        );
+        let new_product = Object.assign(copy(product), {
+            id: guid(),
+            createdAt: new Date,
+        });
+        
+        PRODUCTS.push(new_product);
         return product;
+    }
+
+    removeProduct(product: IProduct) {
+       /*  let id = product.id,
+            i = PRODUCTS.findIndex(product); */
+        // PRODUCTS.splice()
+
     }
 }

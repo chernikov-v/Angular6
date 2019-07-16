@@ -14,13 +14,13 @@ import { ProductService } from '../../services/product/product.service';
 
 
 export class ListComponent implements OnInit  {
-  @Input() items: IProduct[];
+  @Input() products: IProduct[];
   constructor(private productsService: ProductService) {
 
   }
 
   getProducts(): void{
-    this.items = this.productsService.getProducts();
+    this.products = this.productsService.getProducts();
   }
 
   ngOnInit() {

@@ -16,7 +16,8 @@ export class ProductComponent implements OnInit {
         title: null,
         description: null,
         category: null,
-        createdAt: null
+        createdAt: null,
+        qty: 1
     };
     file : File;
     fileName = null;
@@ -30,9 +31,9 @@ export class ProductComponent implements OnInit {
 
     getProduct(): void {
         this.route.params.subscribe(params => {
-            let id = +params['id'];
+            let id = params['id'];
             let product = this.productService.getProduct(id);
-            this.product = product;
+            this.product = product || this.product;
         });
 
     }
