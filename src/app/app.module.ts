@@ -8,6 +8,7 @@ import { ProductComponent } from './components/product/product.component';
 import { MyRouteRoutes } from './my-route.routing';
 import { FormsModule } from '@angular/forms';
 import { MomentModule } from 'ngx-moment';
+import { IndexedDBModule } from "ng-indexed-db";
 
 // import { StoreModule } from '@ngrx/store';
 // import { reducers, metaReducers } from './store/reducers';
@@ -25,7 +26,13 @@ import { MomentModule } from 'ngx-moment';
       BrowserModule,
       MyRouteRoutes,
       FormsModule,
-      MomentModule
+      MomentModule,
+      IndexedDBModule.forRoot([
+        {
+          name: 'ProductsDB',
+          stores: [{ name: 'products' }]
+        }
+      ])
     //   StoreModule.forRoot(reducers, { metaReducers }),
     //   EffectsModule.forRoot([AppEffects])
    ],
