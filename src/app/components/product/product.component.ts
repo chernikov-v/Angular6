@@ -32,7 +32,9 @@ export class ProductComponent implements OnInit {
     getProduct(): void {
         this.route.params.subscribe(params => {
             let id = params['id'];
-            this.productService.getProduct(id).subscribe(product => this.product = product || this.product);
+            this.productService.getProduct(id).subscribe(product => {
+              this.product = product
+            } );
         });
 
     }

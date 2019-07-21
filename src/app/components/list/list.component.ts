@@ -3,6 +3,7 @@ import { Component, OnInit, Input, Optional } from '@angular/core';
 // import { ListItemComponent } from "./list-item/list-item.component";
 import { IProduct } from '../../models/product.interface';
 import { ProductService } from '../../services/product/product.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-list',
@@ -14,13 +15,17 @@ import { ProductService } from '../../services/product/product.service';
 
 
 export class ListComponent implements OnInit  {
-  @Input() products: IProduct[];
+  products: Observable<IProduct[]>;
   constructor(private productsService: ProductService) {
 
   }
 
   getProducts(): void{
-     this.productsService.getProducts().subscribe(products => this.products = products);
+    this.products = this.productsService.getProducts();
+  }
+
+  removeProduct(product: IProduct){
+    return this.productsService.removeProduct(product).subscribe(() => this.getProducts());
   }
 
   ngOnInit() {

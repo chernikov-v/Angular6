@@ -3,9 +3,9 @@
         <div class="card-body">
             <p class="card-text">{{ product.description }}</p>
             <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                    <a routerLink="/product/{{ product.id }}" class="btn btn-sm btn-outline-secondary">Edit</a>
-                    <button type="button" class="btn btn-danger float-right" (click)="removeHandler($event)">Remove</button>
+                <div class="btn-group d-flex justify-content-between ">
+                    <a routerLink="/product/{{ product.id }}" class="btn btn-sm btn-outline-secondary "> Edit </a>
+                    <button type="button" class="btn btn-sm btn-outline-danger float-right" (click)="removeHandler($event)">Remove</button>
                 </div>
                 <small class="text-muted">{{ product.createdAt | amTimeAgo:true}}</small>
             </div>

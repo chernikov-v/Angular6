@@ -13,30 +13,15 @@ export enum TYPES {
   TRACKER = 'tracker'
 }
 
-let PRODUCTS: IProduct[] = [{
-  id: guid(),
-  title: 'First Item',
-  qty: 3,
-  category: TYPES.SMART,
-  price: 22,
-  description: 'First Description',
-  createdAt: new Date()
-}, {
-  id: guid(),
-  title: 'Second Item',
-  description: 'Second Description',
-  createdAt: new Date()
-}, {
-  id: guid(),
-  title: 'Third Item',
-  description: 'Third Description',
-  createdAt: new Date()
-}];
-
-
-
-
-
+const DEFAULT_PRODUCT = {
+  id: null,
+  image: null,
+  title: null,
+  description: null,
+  category: null,
+  createdAt: null,
+  qty: 1
+}
 
 @Injectable({
   providedIn: 'root'
@@ -53,10 +38,7 @@ export class ProductService {
   }
 
   getProduct(_id: string): Observable<IProduct> {
-    // let product = this.getProducts().filter(({ id }) => _id === id)[0];
-
-    // return product
-    return this.indexedDbService.get(DB_KEY_PRODUCTS, _id)
+    return _id ? this.indexedDbService.get(DB_KEY_PRODUCTS, _id) : new Observable( subscriber => subscriber.next(DEFAULT_PRODUCT));
   }
 
   addProduct(product: IProduct): Observable<IProduct> {
@@ -67,10 +49,12 @@ export class ProductService {
     return this.indexedDbService.create(DB_KEY_PRODUCTS, new_product);
   }
 
-  removeProduct(product: IProduct) {
-    /*  let id = product.id,
-         i = PRODUCTS.findIndex(product); */
-    // PRODUCTS.splice()
+  updateProduct(product: IProduct): Observable<IProduct> {
+    if(product.id) return this.indexedDbService.update(DB_KEY_PRODUCTS, product);
+    return this.addProduct(product);
+  }
 
+  removeProduct(product: IProduct) {
+    return this.indexedDbService.delete(DB_KEY_PRODUCTS, product.id);
   }
 }
