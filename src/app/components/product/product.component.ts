@@ -49,8 +49,10 @@ export class ProductComponent implements OnInit {
 
     onSubmit(e, form) {
         if (form.invalid) return;
-        this.productService.addProduct(this.product);
-        this.router.navigate(['']);
+        this.productService.addProduct(this.product).subscribe(() => {
+          this.router.navigate(['']);
+        });
+        
     }
 
 

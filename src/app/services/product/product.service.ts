@@ -59,14 +59,12 @@ export class ProductService {
     return this.indexedDbService.get(DB_KEY_PRODUCTS, _id)
   }
 
-  addProduct(product: IProduct): IProduct {
+  addProduct(product: IProduct): Observable<IProduct> {
     let new_product = Object.assign(copy(product), {
       id: guid(),
       createdAt: new Date,
     });
-
-    PRODUCTS.push(new_product);
-    return product;
+    return this.indexedDbService.create(DB_KEY_PRODUCTS, new_product);
   }
 
   removeProduct(product: IProduct) {

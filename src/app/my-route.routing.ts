@@ -7,6 +7,7 @@ const routes: Routes = [
 
   { path: '', component: ListComponent },
   { path: 'product/:id', component: ProductComponent },
+  { path: 'product/create', component: ProductComponent },
 
 ];
 
