@@ -32,9 +32,7 @@ export class ProductComponent implements OnInit {
     getProduct(): void {
         this.route.params.subscribe(params => {
             let id = params['id'];
-            this.productService.getProduct(id).subscribe(product => {
-              this.product = product
-            } );
+            this.productService.getProduct(id).subscribe(product => this.product = product || this.product);
         });
 
     }
@@ -51,7 +49,7 @@ export class ProductComponent implements OnInit {
 
     onSubmit(e, form) {
         if (form.invalid) return;
-        this.productService.addProduct(this.product).subscribe(() => {
+        this.productService.updateProduct(this.product).subscribe(() => {
           this.router.navigate(['']);
         });
         
