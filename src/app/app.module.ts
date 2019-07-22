@@ -9,6 +9,8 @@ import { MyRouteRoutes } from './my-route.routing';
 import { FormsModule } from '@angular/forms';
 import { MomentModule } from 'ngx-moment';
 import { IndexedDBModule } from "ng-indexed-db";
+import { FilterPipe } from './pipes/filterBy/filterBy.pipe';
+// import {}
 
 // import { StoreModule } from '@ngrx/store';
 // import { reducers, metaReducers } from './store/reducers';
@@ -20,7 +22,8 @@ import { IndexedDBModule } from "ng-indexed-db";
       AppComponent,
       ListComponent,
       ListItemComponent,
-      ProductComponent
+      ProductComponent,
+      FilterPipe
    ],
    imports: [
       BrowserModule,
@@ -39,6 +42,7 @@ import { IndexedDBModule } from "ng-indexed-db";
    providers: [],
    bootstrap: [
       AppComponent
-   ]
+   ],
+
 })
 export class AppModule { }

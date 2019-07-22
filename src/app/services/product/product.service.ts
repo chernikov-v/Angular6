@@ -4,7 +4,6 @@ import { copy, guid } from '../utils';
 import { IndexedDB } from 'ng-indexed-db';
 import { Observable } from 'rxjs';
 
-
 let DB_KEY_PRODUCTS = 'products';
 
 export enum TYPES {
