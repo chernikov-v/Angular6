@@ -5,10 +5,11 @@ import { IProduct } from 'src/app/models/product.interface';
 @Pipe({
   name: 'filterBy'
 })
-export class FilterPipe implements PipeTransform {
+export class FilterByPipe implements PipeTransform {
 
   transform(products: IProduct[] | null, query?: any): any {
-    return products && query ? products.filter(({ title }) => title.toLocaleLowerCase().includes(query.toLocaleLowerCase())) : products;
+      if(!products || !query) return products;
+      return products.filter(({ title }) => title.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
   }
 
 }

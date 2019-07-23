@@ -9,7 +9,8 @@ import { MyRouteRoutes } from './my-route.routing';
 import { FormsModule } from '@angular/forms';
 import { MomentModule } from 'ngx-moment';
 import { IndexedDBModule } from "ng-indexed-db";
-import { FilterPipe } from './pipes/filterBy/filterBy.pipe';
+import { FilterByPipe } from './pipes/filterBy/filterBy.pipe';
+import { OrderByPipe } from './pipes/orderBy/orderBy.pipe';
 // import {}
 
 // import { StoreModule } from '@ngrx/store';
@@ -23,7 +24,8 @@ import { FilterPipe } from './pipes/filterBy/filterBy.pipe';
       ListComponent,
       ListItemComponent,
       ProductComponent,
-      FilterPipe
+      FilterByPipe,
+      OrderByPipe
    ],
    imports: [
       BrowserModule,
