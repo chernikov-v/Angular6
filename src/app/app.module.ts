@@ -11,6 +11,8 @@ import { MomentModule } from 'ngx-moment';
 import { IndexedDBModule } from "ng-indexed-db";
 import { FilterByPipe } from './pipes/filterBy/filterBy.pipe';
 import { OrderByPipe } from './pipes/orderBy/orderBy.pipe';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { BackendProvider } from './services/interceptor/interceptor.service'
 // import {}
 
 // import { StoreModule } from '@ngrx/store';
@@ -37,11 +39,12 @@ import { OrderByPipe } from './pipes/orderBy/orderBy.pipe';
           name: 'ProductsDB',
           stores: [{ name: 'products' }]
         }
-      ])
+      ]),
+      HttpClientModule
     //   StoreModule.forRoot(reducers, { metaReducers }),
     //   EffectsModule.forRoot([AppEffects])
    ],
-   providers: [],
+   providers: [BackendProvider],
    bootstrap: [
       AppComponent
    ],

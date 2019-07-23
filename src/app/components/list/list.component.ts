@@ -4,6 +4,7 @@ import { Component, OnInit, Input, Optional } from '@angular/core';
 import { IProduct } from '../../models/product.interface';
 import { ProductService } from '../../services/product/product.service';
 import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 // import { FilterPipe } from '../../pipes/filterBy/filterBy.pipe';
 
@@ -19,15 +20,20 @@ import { Observable } from 'rxjs';
 
 
 export class ListComponent implements OnInit {
-  products: Observable<IProduct[]>;
+  products$: Observable<IProduct[]>;
   search: string;
   get searchString() { return this.search }
-  constructor(private productsService: ProductService) {
-
+  constructor(private productsService: ProductService, private http: HttpClient) {
+    /* this.http.get('/products/list').subscribe(() => {
+      // debugger;
+    }, (err) => {
+      console.error(err);
+      // debugger;
+    }); */
   }
 
   getProducts(): void {
-    this.products = this.productsService.getProducts();
+      this.products$ = this.productsService.getProducts();
   }
 
   removeProduct(product: IProduct) {
