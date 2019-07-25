@@ -23,13 +23,8 @@ export class ListComponent implements OnInit {
   products$: Observable<IProduct[]>;
   search: string;
   get searchString() { return this.search }
-  constructor(private productsService: ProductService, private http: HttpClient) {
-    /* this.http.get('/products/list').subscribe(() => {
-      // debugger;
-    }, (err) => {
-      console.error(err);
-      // debugger;
-    }); */
+  constructor(private productsService: ProductService) {
+    
   }
 
   getProducts(): void {

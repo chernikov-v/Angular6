@@ -1,137 +1,105 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { mergeMap, materialize, dematerialize, delay } from 'rxjs/operators';
+import { mergeMap, materialize, dematerialize, delay, map } from 'rxjs/operators';
+import { IndexedDB } from 'ng-indexed-db';
+import { IProduct } from '../../models/product.interface';
+
+
+let DB_KEY_PRODUCTS = 'products';
+
+const DEFAULT_PRODUCT = {
+    id: null,
+    image: null,
+    title: null,
+    description: null,
+    category: null,
+    createdAt: null,
+    qty: 1
+}
+
+export enum URLS {
+    list = '/api/products/list',
+    getNew = '/api/products/new',
+    get = '/api/products/get',
+    update = '/api/products/update',
+    delete = '/api/products/delete'
+};
+
+export enum METHODS {
+    get = 'GET',
+    post = 'POST',
+    delete = 'DELETE'
+}
+
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class BackendInterceptor implements HttpInterceptor {
 
-  constructor() { }
+    constructor(private indexedDbService: IndexedDB) { }
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    debugger;
-    // array in local storage for registered users
-    let users: any[] = JSON.parse(localStorage.getItem('users')) || [];
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        debugger;
 
-    // wrap in delayed observable to simulate server api call
-    return of(null)
-      .pipe(mergeMap(() => {
+        return of(null)
+            .pipe(mergeMap(() => {
+                let { url, method } = request;
+                switch (true) {
+                    case url.endsWith(URLS.list) && method === METHODS.get: {
 
-        // authenticate
-        if (request.url.endsWith('/api/authenticate') && request.method === 'POST') {
-          // find if any user matches login credentials
-          let filteredUsers = users.filter(user => {
-            return user.username === request.body.username && user.password === request.body.password;
-          });
+                        return this.indexedDbService.list(DB_KEY_PRODUCTS).pipe(
+                            map( ( body : IProduct[] ) => new HttpResponse({ status: 200, body: body }))
+                        );
 
-          if (filteredUsers.length) {
-            // if login details are valid return 200 OK with user details and fake jwt token
-            let user = filteredUsers[0];
-            let body = {
-              id: user.id,
-              username: user.username,
-              firstName: user.firstName,
-              lastName: user.lastName,
-              token: 'fake-jwt-token'
-            };
+                    }
+                        break;
+                    case url.endsWith(URLS.getNew) && method === METHODS.get: {
 
-            return of(new HttpResponse({ status: 200, body: body }));
-          } else {
-            return Observable.throw('Username or password is incorrect');
-          }
-        }
 
-        // get users
-        if (request.url.endsWith('/api/users') && request.method === 'GET') {
-          // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
-          if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-            return of(new HttpResponse({ status: 200, body: users }));
-          } else {
-            // return 401 not authorised if token is null or invalid
-            return Observable.throw('Unauthorised');
-          }
-        }
 
-        // get user by id
-        if (request.url.match(/\/api\/users\/\d+$/) && request.method === 'GET') {
-          // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
-          if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-            // find user by id in users array
-            let urlParts = request.url.split('/');
-            let id = parseInt(urlParts[urlParts.length - 1]);
-            let matchedUsers = users.filter(user => { return user.id === id; });
-            let user = matchedUsers.length ? matchedUsers[0] : null;
+                    }
+                        break;
+                    case url.endsWith(URLS.get) && method === METHODS.get: {
 
-            return of(new HttpResponse({ status: 200, body: user }));
-          } else {
-            // return 401 not authorised if token is null or invalid
-            return Observable.throw('Unauthorised');
-          }
-        }
+                        // return _id ? this.indexedDbService.get(DB_KEY_PRODUCTS, _id) : new Observable( subscriber => subscriber.next(DEFAULT_PRODUCT));
 
-        // create user
-        if (request.url.endsWith('/api/users') && request.method === 'POST') {
-          // get new user object from post body
-          let newUser = request.body;
+                    }
+                        break;
+                    case url.endsWith(URLS.update) && method === METHODS.post: {
 
-          // validation
-          let duplicateUser = users.filter(user => { return user.username === newUser.username; }).length;
-          if (duplicateUser) {
-            return Observable.throw('Username "' + newUser.username + '" is already taken');
-          }
 
-          // save new user
-          newUser.id = users.length + 1;
-          users.push(newUser);
-          localStorage.setItem('users', JSON.stringify(users));
 
-          // respond 200 OK
-          return of(new HttpResponse({ status: 200 }));
-        }
+                    }
+                        break;
+                    case url.endsWith(URLS.delete) && method === METHODS.post: {
 
-        // delete user
-        if (request.url.match(/\/api\/users\/\d+$/) && request.method === 'DELETE') {
-          // check for fake auth token in header and return user if valid, this security is implemented server side in a real application
-          if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-            // find user by id in users array
-            let urlParts = request.url.split('/');
-            let id = parseInt(urlParts[urlParts.length - 1]);
-            for (let i = 0; i < users.length; i++) {
-              let user = users[i];
-              if (user.id === id) {
-                // delete user
-                users.splice(i, 1);
-                localStorage.setItem('users', JSON.stringify(users));
-                break;
-              }
-            }
 
-            // respond 200 OK
-            return of(new HttpResponse({ status: 200 }));
-          } else {
-            // return 401 not authorised if token is null or invalid
-            return Observable.throw('Unauthorised');
-          }
-        }
 
-        // pass through any requests not handled above
-        return next.handle(request);
+                    }
+                        break;
 
-      }),
-      materialize(),
-      delay(500),
-      dematerialize()
-      );
+                    default:
+                        // return Observable.throw('Unknown method!');
+                        return of(new HttpResponse({ status: 404, body: { Error: 'Unknown method!' } }));
+                }
 
-    // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648)
-  }
+                return next.handle(request);
+
+            }),
+                materialize(),
+                delay(500),
+                dematerialize()
+            );
+
+        // call materialize and dematerialize to ensure delay even if an error is thrown (https://github.com/Reactive-Extensions/RxJS/issues/648)
+    }
 }
 
 export let BackendProvider = {
-  // use fake backend in place of Http service for backend-less development
-  provide: HTTP_INTERCEPTORS,
-  useClass: BackendInterceptor,
-  multi: true
+    // use fake backend in place of Http service for backend-less development
+    provide: HTTP_INTERCEPTORS,
+    useClass: BackendInterceptor,
+    multi: true
 };
