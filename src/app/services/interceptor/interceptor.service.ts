@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { mergeMap, materialize, dematerialize, delay, map } from 'rxjs/operators';
+import { mergeMap, materialize, dematerialize, delay, map, mapTo } from 'rxjs/operators';
 import { IndexedDB } from 'ng-indexed-db';
 import { IProduct } from '../../models/product.interface';
+import { copy, guid } from '../utils';
+
 
 
 let DB_KEY_PRODUCTS = 'products';
@@ -23,7 +25,8 @@ export enum URLS {
     getNew = '/api/products/new',
     get = '/api/products/get',
     update = '/api/products/update',
-    delete = '/api/products/delete'
+    delete = '/api/products/delete',
+    create = '/api/products/create'
 };
 
 export enum METHODS {
@@ -41,55 +44,58 @@ export class BackendInterceptor implements HttpInterceptor {
     constructor(private indexedDbService: IndexedDB) { }
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        debugger;
 
         return of(null)
             .pipe(mergeMap(() => {
-                let { url, method } = request;
+                let { url, method, body } = request;
                 switch (true) {
-                    case url.endsWith(URLS.list) && method === METHODS.get: {
+                    case url.endsWith(URLS.list) && method === METHODS.get: 
+                        return this.indexedDbService.list(DB_KEY_PRODUCTS)
+                            .pipe(
+                                map((body: IProduct[]) => new HttpResponse({ status: 200, body: body }))
+                            )
 
-                        return this.indexedDbService.list(DB_KEY_PRODUCTS).pipe(
-                            map( ( body : IProduct[] ) => new HttpResponse({ status: 200, body: body }))
+                    case url.endsWith(URLS.getNew) && method === METHODS.get: 
+                        return of(new HttpResponse({ status: 200, body: DEFAULT_PRODUCT }));
+                    
+                    case url.endsWith(URLS.create) && method === METHODS.post: {
+                        let new_product = Object.assign(copy(body), {
+                            id: guid(),
+                            createdAt: new Date,
+                        });
+                        return this.indexedDbService.create(DB_KEY_PRODUCTS, new_product).pipe(
+                            map(() => new HttpResponse({ status: 200, body: new_product }))
+                        );
+                    }
+
+                    case url.endsWith(URLS.get) && method === METHODS.post: 
+                        return this.indexedDbService.get(DB_KEY_PRODUCTS, body).pipe(
+                            map(response => new HttpResponse({ status: 200, body: response }))
                         );
 
-                    }
-                        break;
-                    case url.endsWith(URLS.getNew) && method === METHODS.get: {
-
-
-
-                    }
-                        break;
-                    case url.endsWith(URLS.get) && method === METHODS.get: {
-
-                        // return _id ? this.indexedDbService.get(DB_KEY_PRODUCTS, _id) : new Observable( subscriber => subscriber.next(DEFAULT_PRODUCT));
-
-                    }
-                        break;
-                    case url.endsWith(URLS.update) && method === METHODS.post: {
-
-
-
-                    }
-                        break;
-                    case url.endsWith(URLS.delete) && method === METHODS.post: {
-
-
-
-                    }
-                        break;
+                    case url.endsWith(URLS.update) && method === METHODS.post:
+                        if (body.id) {
+                            return this.indexedDbService.update(DB_KEY_PRODUCTS, body).pipe(
+                                map(response => new HttpResponse({ status: 200, body: response }))
+                            );
+                        } else {
+                            return of(new HttpErrorResponse({ status: 500, error: 'Unknown instance' }))
+                        }
+                    
+                    case url.endsWith(URLS.delete) && method === METHODS.post:
+                        return this.indexedDbService.delete(DB_KEY_PRODUCTS, body.id).pipe(
+                            map(response => new HttpResponse({ status: 200, body: response }))
+                        );
 
                     default:
-                        // return Observable.throw('Unknown method!');
                         return of(new HttpResponse({ status: 404, body: { Error: 'Unknown method!' } }));
                 }
 
-                return next.handle(request);
+                // return next.handle(request);
 
             }),
                 materialize(),
-                delay(500),
+                delay(1000),
                 dematerialize()
             );
 

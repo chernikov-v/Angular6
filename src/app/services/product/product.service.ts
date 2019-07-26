@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IProduct } from '../../models/product.interface';
-import { copy, guid } from '../utils';
 import { IndexedDB } from 'ng-indexed-db';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { map, mapTo } from 'rxjs/operators';
 
@@ -16,15 +15,7 @@ export enum TYPES {
     TRACKER = 'tracker'
 }
 
-const DEFAULT_PRODUCT = {
-    id: null,
-    image: null,
-    title: null,
-    description: null,
-    category: null,
-    createdAt: null,
-    qty: 1
-}
+
 
 @Injectable({
     providedIn: 'root'
@@ -37,33 +28,34 @@ export class ProductService {
 
 
     getProducts(): Observable<IProduct[]> {
-        return this.http.get(URLS.list).pipe(
-            map( data => {
-                // debugger;
+    // getProducts(): Observable<Object> {
+        return this.http.get<IProduct[]>(URLS.list)/* .pipe(
+            map((data) => {
+                debugger;
                 return data;
             })
-        );
+        ); */
+        
         //   return this.indexedDbService.list(DB_KEY_PRODUCTS);
     }
 
-    getProduct(_id: string): Observable<IProduct> {
-        return _id ? this.indexedDbService.get(DB_KEY_PRODUCTS, _id) : new Observable(subscriber => subscriber.next(DEFAULT_PRODUCT));
+    getNewProduct(): Observable<IProduct>{
+        return this.http.get<IProduct>(URLS.getNew);
+    }
+
+    getProduct(id: string): Observable<IProduct> {
+        return this.http.post<IProduct>(URLS.get, id);
     }
 
     addProduct(product: IProduct): Observable<IProduct> {
-        let new_product = Object.assign(copy(product), {
-            id: guid(),
-            createdAt: new Date,
-        });
-        return this.indexedDbService.create(DB_KEY_PRODUCTS, new_product);
+        return this.http.post<IProduct>(URLS.create, product);
     }
 
     updateProduct(product: IProduct): Observable<IProduct> {
-        if (product.id) return this.indexedDbService.update(DB_KEY_PRODUCTS, product);
-        return this.addProduct(product);
+        return this.http.post<IProduct>(URLS.update, product);
     }
 
     removeProduct(product: IProduct) {
-        return this.indexedDbService.delete(DB_KEY_PRODUCTS, product.id);
+        return this.http.post(URLS.delete, product);
     }
 }

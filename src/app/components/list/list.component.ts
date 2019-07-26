@@ -1,42 +1,59 @@
-import { Component, OnInit, Input, Optional } from '@angular/core';
+import { Component, OnInit, Input, Optional, OnDestroy } from '@angular/core';
 
 // import { ListItemComponent } from "./list-item/list-item.component";
 import { IProduct } from '../../models/product.interface';
 import { ProductService } from '../../services/product/product.service';
-import { Observable } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { switchMap, tap, takeUntil } from 'rxjs/operators';
 
 // import { FilterPipe } from '../../pipes/filterBy/filterBy.pipe';
 
 @Component({
-  selector: 'app-list',
-  // entryComponents: [ ListItemComponent ],
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.css'],
-  // viewProviders: [ FilterPipe ]
-  // declarations: [ FilterPipe ]
+    selector: 'app-list',
+    // entryComponents: [ ListItemComponent ],
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.css'],
+    // viewProviders: [ FilterPipe ]
+    // declarations: [ FilterPipe ]
 })
 
 
 
-export class ListComponent implements OnInit {
-  products$: Observable<IProduct[]>;
-  search: string;
-  get searchString() { return this.search }
-  constructor(private productsService: ProductService) {
-    
-  }
+export class ListComponent implements OnInit, OnDestroy {
+    destroy$: Subject<boolean> = new Subject<boolean>()
+    isloading: boolean = false;
+    products$: Observable<IProduct[]>;
+    search: string;
+    get searchString() { return this.search }
+    constructor(private productsService: ProductService) {
 
-  getProducts(): void {
-      this.products$ = this.productsService.getProducts();
-  }
+    }
 
-  removeProduct(product: IProduct) {
-    return this.productsService.removeProduct(product).subscribe(() => this.getProducts());
-  }
+    ngOnDestroy() {
+        this.destroy$.next();
+        this.destroy$.unsubscribe();
+    }
 
-  ngOnInit() {
-    this.getProducts();
-  }
+    getProducts(): void {
+        this.products$ = of(null).pipe(
+            tap(() => this.loading(true)),
+            switchMap(() => this.productsService.getProducts()),
+            tap(() => this.loading(false)),
+            takeUntil(this.destroy$)
+        );
+    }
+
+    removeProduct(product: IProduct) {
+        return this.productsService.removeProduct(product).subscribe(() => this.getProducts());
+    }
+
+    loading(status) {
+        this.isloading = status;
+    }
+
+    ngOnInit() {
+        this.getProducts();
+    }
 
 }

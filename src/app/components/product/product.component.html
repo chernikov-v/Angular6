@@ -1,4 +1,4 @@
-<form class="product" #f="ngForm" (submit)="onSubmit($event, f)" (change)="onFormChange($event)" *ngIf="product">
+<form class="product" #f="ngForm" (submit)="onSubmit($event, f)" *ngIf="product;">
    
     <div class="product__image card mb-3">
         <img [src]="product.image" class="card-img-top" alt="">
