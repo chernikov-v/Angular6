@@ -13,6 +13,7 @@ import { FilterByPipe } from './pipes/filterBy/filterBy.pipe';
 import { OrderByPipe } from './pipes/orderBy/orderBy.pipe';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BackendProvider } from './services/interceptor/interceptor.service'
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 // import {}
 
 // import { StoreModule } from '@ngrx/store';
@@ -26,6 +27,7 @@ import { BackendProvider } from './services/interceptor/interceptor.service'
       ListComponent,
       ListItemComponent,
       ProductComponent,
+      PageNotFoundComponent,
       FilterByPipe,
       OrderByPipe
    ],
