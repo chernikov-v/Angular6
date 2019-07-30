@@ -40,7 +40,9 @@ export enum ProductActionTypes {
     Delete = '[Product] Delete',
     DeleteSuccess = '[Product] DeleteSuccess',
     Select = '[Product] Select',
-    SelectSuccess = '[Product] SelectSuccess'
+    SelectSuccess = '[Product] SelectSuccess',
+    LoadList = '[Product] LoadList',
+    LoadListSuccess = '[Product] LoadListSuccess'
 };
 
 
@@ -52,7 +54,7 @@ export class Create implements Action {
 export class CreateSuccess implements Action {
     readonly type = ProductActionTypes.CreateSuccess;
 
-    constructor(public payload: IProduct[]) { }
+    constructor(public payload: IProduct) { }
 }
 
 export class Update implements Action {
@@ -63,7 +65,7 @@ export class Update implements Action {
 export class UpdateSuccess implements Action {
     readonly type = ProductActionTypes.UpdateSuccess;
 
-    constructor(public payload: IProduct[]) { }
+    constructor(public payload: IProduct) { }
 }
 
 export class Delete implements Action {
@@ -74,7 +76,7 @@ export class Delete implements Action {
 export class DeleteSuccess implements Action {
     readonly type = ProductActionTypes.DeleteSuccess;
 
-    constructor(public payload: IProduct[]) { }
+    constructor(public payload: IProduct) { }
 }
 export class Select implements Action {
     readonly type = ProductActionTypes.Select;
@@ -85,6 +87,17 @@ export class SelectSuccess implements Action {
     readonly type = ProductActionTypes.SelectSuccess;
 
     constructor(public payload: IProduct) { }
+}
+
+export class LoadList implements Action {
+    readonly type = ProductActionTypes.LoadList;
+
+    constructor() { }
+}
+export class LoadListSuccess implements Action {
+    readonly type = ProductActionTypes.LoadListSuccess;
+
+    constructor(public payload: IProduct[]) { }
 }
 
 
@@ -98,4 +111,6 @@ export type ProductActions
                         | Delete
                         | DeleteSuccess
                         | Select
-                        | SelectSuccess;
+                        | SelectSuccess
+                        | LoadList
+                        | LoadListSuccess;

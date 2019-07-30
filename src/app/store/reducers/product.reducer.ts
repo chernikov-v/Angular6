@@ -7,24 +7,24 @@ export interface State {
 };
 
 const initialState: State = {
-        products: null,
+        products: [],
         selected: null,
 };
 
 export function productReducer(state = initialState, action: ProductActions ): State {
-    let data = action.payload;
     switch (action.type) {
         case ProductActionTypes.CreateSuccess:
             return Object.assign({}, state, { products: [ ...state.products, action.payload]});
 
         case ProductActionTypes.UpdateSuccess: 
-        return Object.assign({}, state, { products: state.products.map(product => product.id === (data as IProduct).id ? data : product)});
+        return Object.assign({}, state, { products: state.products.map(product => product.id === (action.payload as IProduct).id ? action.payload : product)});
 
         case ProductActionTypes.DeleteSuccess:
-        return Object.assign({}, state, { products: state.products.filter( product =>  product.id === (data as IProduct).id) });
-               
+        return Object.assign({}, state, { products: state.products.filter( product =>  product.id === (action.payload as IProduct).id) });
         case ProductActionTypes.SelectSuccess:
             return Object.assign({}, state, { selected: action.payload });
+        case ProductActionTypes.LoadListSuccess:
+            return Object.assign({}, state, { products: action.payload });
         
 
         default: {

@@ -17,7 +17,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { StoreModule } from '@ngrx/store';
 import { productReducer } from './store/reducers/product.reducer';
 import { EffectsModule } from '@ngrx/effects';
-import { productEffects } from './store/effects/product.effects';
+import { ProductEffects } from './store/effects/product.effects';
 // import {}
 
 // import { StoreModule } from '@ngrx/store';
@@ -47,8 +47,8 @@ import { productEffects } from './store/effects/product.effects';
         }
       ]),
       HttpClientModule,
-      StoreModule.forRoot({ products: productReducer }),
-      EffectsModule.forRoot([productEffects])
+      StoreModule.forRoot({ productsStore: productReducer }),
+      EffectsModule.forRoot([ProductEffects])
    ],
    providers: [BackendProvider],
    bootstrap: [
