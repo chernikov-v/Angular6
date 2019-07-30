@@ -1,19 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Action } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { ProductActionTypes } from '../actions/product.actions';
-
+import { ProductActionTypes, ProductActions, CreateSuccess } from '../actions/product.actions';
+import { map, mergeMap } from 'rxjs/operators';
+import { ProductService } from '../../services/product/product.service'
 @Injectable()
 export class productEffects {
-    @Effect() create$: Observable<Action> = this.actions$
+    @Effect() create$: Observable<CreateSuccess> = this.actions$
                         .pipe(
                             ofType(ProductActionTypes.Create),
-                            // map
+                              mergeMap( data => this.productService.addProduct(data).pipe(
+                                map( products => new CreateSuccess(products) )
+                              )
+                            )
                         );
 
     constructor(
-        private actions$: Actions
+        private actions$: Actions,
+        private productService: ProductService
     ) {}
 }
 

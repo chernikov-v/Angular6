@@ -11,22 +11,20 @@ const initialState: State = {
         selected: null,
 };
 
-export function reducer(state = initialState, action: ProductActions ): State {
+export function productReducer(state = initialState, action: ProductActions ): State {
+    let data = action.payload;
     switch (action.type) {
-        case ProductActionTypes.CreateSuccess: 
-        case ProductActionTypes.UpdateSuccess: 
-        case ProductActionTypes.DeleteSuccess:
-            return {
-                ...state,
-                products: action.payload,
-                // selected: null
-            };
+        case ProductActionTypes.CreateSuccess:
+            return Object.assign({}, state, { products: [ ...state.products, action.payload]});
 
+        case ProductActionTypes.UpdateSuccess: 
+        return Object.assign({}, state, { products: state.products.map(product => product.id === (data as IProduct).id ? data : product)});
+
+        case ProductActionTypes.DeleteSuccess:
+        return Object.assign({}, state, { products: state.products.filter( product =>  product.id === (data as IProduct).id) });
+               
         case ProductActionTypes.SelectSuccess:
-            return {
-                ...state,
-                selected: action.payload
-            }
+            return Object.assign({}, state, { selected: action.payload });
         
 
         default: {

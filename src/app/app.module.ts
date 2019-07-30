@@ -14,6 +14,10 @@ import { OrderByPipe } from './pipes/orderBy/orderBy.pipe';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BackendProvider } from './services/interceptor/interceptor.service'
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { StoreModule } from '@ngrx/store';
+import { productReducer } from './store/reducers/product.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { productEffects } from './store/effects/product.effects';
 // import {}
 
 // import { StoreModule } from '@ngrx/store';
@@ -42,9 +46,9 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
           stores: [{ name: 'products' }]
         }
       ]),
-      HttpClientModule
-    //   StoreModule.forRoot(reducers, { metaReducers }),
-    //   EffectsModule.forRoot([AppEffects])
+      HttpClientModule,
+      StoreModule.forRoot({ products: productReducer }),
+      EffectsModule.forRoot([productEffects])
    ],
    providers: [BackendProvider],
    bootstrap: [
