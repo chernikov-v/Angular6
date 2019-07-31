@@ -18,6 +18,7 @@ import { StoreModule } from '@ngrx/store';
 import { productReducer } from './store/reducers/product.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ProductEffects } from './store/effects/product.effects';
+import { SpinnerComponent } from './components/spinner/spinner.component';
 // import {}
 
 // import { StoreModule } from '@ngrx/store';
@@ -32,6 +33,7 @@ import { ProductEffects } from './store/effects/product.effects';
       ListItemComponent,
       ProductComponent,
       PageNotFoundComponent,
+      SpinnerComponent,
       FilterByPipe,
       OrderByPipe
    ],

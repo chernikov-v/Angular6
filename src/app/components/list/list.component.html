@@ -1,22 +1,12 @@
-<div class="row">    
+<div class="row">
     <div class="input-group col-md-12 mb-3">
-      <input class="form-control" type="text" name="search" placeholder="Search..." #searchInput (keyup.enter)="search = searchInput.value">
-      <div class="input-group-append">
-          <button class="btn btn-secondary" type="button" (click)="search = searchInput.value"><i class="fas fa-search"></i></button>
+        <input class="form-control" type="text" name="search" placeholder="Search..." #searchInput (keyup.enter)="search = searchInput.value">
+        <div class="input-group-append">
+            <button class="btn btn-secondary" type="button" (click)="search = searchInput.value"><i class="fas fa-search"></i></button>
         </div>
     </div>
 
-    <ng-container *ngIf="products$ | async; else elseTemplate">
-        <div class="col-md-4" *ngFor="let product of products$ | async | filterBy: searchString | orderBy: 'createdAt'; index as id;  ">
-            <app-list-item [product]="product" (onRemove)="removeProduct($event.product)"></app-list-item>
-        </div>
-    </ng-container>
-    <ng-template #elseTemplate>
-        <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
+    <div class="col-md-4" *ngFor="let product of products$ | async | filterBy: searchString | orderBy: 'createdAt'; index as id;  ">
+        <app-list-item [product]="product" (onRemove)="removeProduct($event.product)"></app-list-item>
     </div>
-    </ng-template>
-    
-    
-   
 </div>
