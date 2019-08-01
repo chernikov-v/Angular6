@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { ListComponent } from "./list/list.component";
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, delay } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { IProduct } from '../models/product.interface';
 
@@ -14,6 +14,7 @@ import { IProduct } from '../models/product.interface';
 })
 export class AppComponent {
   isLoading$:  Observable<boolean> = this.store.select('productsStore').pipe(
+    delay(0),
     map( ({loading}) => loading),   
   );
   constructor(private store: Store<{ products: IProduct[] }> ){
