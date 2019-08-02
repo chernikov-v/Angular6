@@ -3,8 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService, TYPES } from '../../services/product/product.service';
 import { IProduct } from '../../models/product.interface';
 import { file2base64 } from '../../services/utils';
-import { takeUntil, flatMap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { takeUntil, flatMap, map } from 'rxjs/operators';
+import { Subject, Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { GetNew, Get } from 'src/app/store/actions/product.actions';
 
 @Component({
     selector: 'app-product',
@@ -13,6 +15,9 @@ import { Subject } from 'rxjs';
 })
 export class ProductComponent implements OnInit, OnDestroy {
     destroy$: Subject<boolean> = new Subject<boolean>();
+    selected$:  Observable<IProduct> = this.store.select('productsStore').pipe(
+        map( state => state.selected),   
+    );
     product: IProduct;
     file: File;
     fileName = null;
@@ -21,7 +26,11 @@ export class ProductComponent implements OnInit, OnDestroy {
     constructor(
         private productService: ProductService,
         private route: ActivatedRoute,
-        private router: Router) {
+        private router: Router,
+        private store: Store<{ selected: IProduct}>) {
+
+          let id = this.route.snapshot.paramMap.get('id');
+          this.store.dispatch(id ? new Get(id): new GetNew);
     }
 
     ngOnDestroy() {
@@ -59,7 +68,8 @@ export class ProductComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.getProduct();
+      // this.store.dispatch();
+        // this.getProduct();
     }
 
 

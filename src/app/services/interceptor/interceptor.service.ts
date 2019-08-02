@@ -84,7 +84,7 @@ export class BackendInterceptor implements HttpInterceptor {
                     
                     case url.endsWith(URLS.delete) && method === METHODS.post:
                         return this.indexedDbService.delete(DB_KEY_PRODUCTS, body.id).pipe(
-                            map(response => new HttpResponse({ status: 200, body: response }))
+                            map(response => new HttpResponse({ status: 200, body: body }))
                         );
 
                     default:

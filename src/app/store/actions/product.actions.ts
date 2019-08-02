@@ -1,33 +1,3 @@
-/* import { createAction, props } from '@ngrx/store';
-import { IProduct } from 'src/app/models/product.interface';
-
-
-export enum ProductActionTypes {
-    Create = '[Product] Creade',
-    Update = '[Product] Update',
-    Delete = '[Product] Delete'
-    // Verb2 = '[Product] Verb2'
-
-    
-}
-
-export const ACreate = createAction(
-    ProductActionTypes.Create,
-    props<IProduct>()
-);
-
-export const AUpdate = createAction(
-    ProductActionTypes.Update,
-    props<IProduct>()
-);
-
-export const ADelete = createAction(
-    ProductActionTypes.Delete,
-    props<IProduct>()
-);
-
-export type ProductActions = ACreate | AUpdate | ADelete; */
-
 import { Action } from '@ngrx/store';
 import { IProduct } from 'src/app/models/product.interface';
 
@@ -39,8 +9,10 @@ export enum ProductActionTypes {
     UpdateSuccess = '[Product] UpdateSuccess',
     Delete = '[Product] Delete',
     DeleteSuccess = '[Product] DeleteSuccess',
-    Select = '[Product] Select',
-    SelectSuccess = '[Product] SelectSuccess',
+    Get = '[Product] Get',
+    GetSuccess = '[Product] GetSuccess',
+    GetNew = '[Product] GetNew',
+    GetNewSuccess = '[Product] GetNewSuccess',
     LoadList = '[Product] LoadList',
     LoadListSuccess = '[Product] LoadListSuccess'
 };
@@ -78,15 +50,27 @@ export class DeleteSuccess implements Action {
 
     constructor(public payload: IProduct) { }
 }
-export class Select implements Action {
-    readonly type = ProductActionTypes.Select;
 
-    constructor(public payload: string) { }
+export class Get implements Action {
+  readonly type = ProductActionTypes.Get;
+
+  constructor(public payload: string) { }
 }
-export class SelectSuccess implements Action {
-    readonly type = ProductActionTypes.SelectSuccess;
+export class GetSuccess implements Action {
+  readonly type = ProductActionTypes.GetSuccess;
 
-    constructor(public payload: IProduct) { }
+  constructor(public payload: IProduct) { }
+}
+
+export class GetNew implements Action {
+  readonly type = ProductActionTypes.GetNew;
+
+  constructor() { }
+}
+export class GetNewSuccess implements Action {
+  readonly type = ProductActionTypes.GetNewSuccess;
+
+  constructor(public payload: IProduct) { }
 }
 
 export class LoadList implements Action {
@@ -110,7 +94,9 @@ export type ProductActions
                         | UpdateSuccess 
                         | Delete
                         | DeleteSuccess
-                        | Select
-                        | SelectSuccess
+                        | Get
+                        | GetSuccess
+                        | GetNew
+                        | GetNewSuccess
                         | LoadList
                         | LoadListSuccess;
