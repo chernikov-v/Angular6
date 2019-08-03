@@ -1,82 +1,4 @@
-<form class="product" #f="ngForm" (submit)="onSubmit($event, f)" *ngIf="selected$ | async;">
-   
-    <div class="product__image card mb-3">
-        <img [src]="selected$.image" class="card-img-top" alt="">
-    </div>
-
-    <div class="custom-file mb-3">
-            <label for="customFile">
-                    <span class="product__err-msg">*</span>
-                    Product Image
-                    <span class="product__err-msg" *ngIf="fileRef.invalid">
-                        {{ log(file) }}
-                        <span *ngIf="title.errors.accept"> Wrong file format</span>                        
-                    </span> 
-                </label>
-                {{log(title)}}
-        <input type="file" accept="image/*" name="file" #fileRef="ngModel" [(ngModel)]="file" (change)="onImageLoad($event)" class="custom-file-input" id="customFile">
-        <label class="custom-file-label" for="customFile">{{ fileName || 'Choose product image file' }}</label>
-    </div>
-    <div class="form-row">
-        <div class="col-md-6">
-            <div class="form-group mb-4">
-                <label for="prodTitle">
-                        <span class="product__err-msg">*</span>
-                        Product Title
-                        <span class="product__err-msg" *ngIf="title.invalid">
-                            <span *ngIf="title.errors.required"> Title is required! </span>
-                            <span *ngIf="title.errors.minlength && !title.errors.required"> Min length should be 3! </span>
-                            
-                        </span> 
-                    </label>
-                    {{log(title)}}
-                <input type="text" name='title' required minlength="3" #title='ngModel' class="form-control" id="prodTitle" [(ngModel)]="selected$.title"
-                    aria-describedby="productHelp" placeholder="Enter product title">
-                <small id="productHelp" class="form-text text-muted">Enter product title here.</small>
-            </div>
-            <div class="form-group">
-                <div class="form-group">
-                    <label for="productCat">Pruduct Category</label>
-                    <select class="form-control" name="category" [(ngModel)]="selected$.category" id="productCat">
-                        <option *ngFor="let cat of categories">{{ cat }}</option>
-                    </select>
-                </div>
-            </div>
-
-        </div>
-        <div class="col-md-6">
-            <label for="productDescription">Description</label>
-            <textarea class="form-control"name="description" [(ngModel)]="product.description" id="productDescription" rows="6"
-                placeholder="Enter product description"></textarea>
-        </div>
-    </div>
-    <div class="form-row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label for="productQty"> 
-                    <span class="product__err-msg">*</span>
-                    Products availability 
-                    <span class="product__err-msg" *ngIf="qty.invalid">Value can't be less than 0;</span> 
-                </label>
-                <input type="number" required min="0" max="5" name="qty" #qty="ngModel" [(ngModel)]="product.qty" class="form-control" id="productQty" placeholder="Enter available products qty">
-            </div>
-        </div>
-        <div class="col-md-6">
-            <label for="productPrice">Product Price</label>
-            <div class="input-group">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">$</span>
-                </div>
-                <input type="text" class="form-control" name="price" min="0" [(ngModel)]="product.price" id="productPrice" aria-label="Amount (to the nearest dollar)">
-            </div>
-        </div>
-    </div>
-
-
-
-    <button class="btn btn-primary mt-3">Submit</button>
-</form>
-<!-- <form class="product" #f="ngForm" (submit)="onSubmit($event, f)" *ngIf="product;">
+<form class="product" #f="ngForm" (submit)="onSubmit($event, f)" *ngIf="product;">
    
     <div class="product__image card mb-3">
         <img [src]="product.image" class="card-img-top" alt="">
@@ -153,4 +75,4 @@
 
 
     <button class="btn btn-primary mt-3">Submit</button>
-</form> -->
+</form>
