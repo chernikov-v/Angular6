@@ -1,0 +1,9 @@
+:host.product img {
+  display: block;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+:host.product .product__imag-container{
+  height: 225px;
+}
