@@ -1,14 +1,11 @@
 import { Injectable } from '@angular/core';
 import { IProduct } from '../../models/product.interface';
 import { IndexedDB } from 'ng-indexed-db';
-import { Observable, of } from 'rxjs';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { map, mapTo } from 'rxjs/operators';
+import { Observable, EMPTY } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { URLS } from '../interceptor/interceptor.service';
-
-let DB_KEY_PRODUCTS = 'products';
-
+import { catchError } from 'rxjs/operators';
 export enum TYPES {
     SMART = 'smart',
     WATCH = 'watch',
@@ -28,15 +25,11 @@ export class ProductService {
 
 
     getProducts(): Observable<IProduct[]> {
-    // getProducts(): Observable<Object> {
-        return this.http.get<IProduct[]>(URLS.list)/* .pipe(
-            map((data) => {
-                debugger;
-                return data;
-            })
-        ); */
-        
-        //   return this.indexedDbService.list(DB_KEY_PRODUCTS);
+        return this.http.get<IProduct[]>(URLS.list).pipe(
+          catchError( error => {
+            return EMPTY;
+          })
+        )
     }
 
     getNewProduct(): Observable<IProduct>{

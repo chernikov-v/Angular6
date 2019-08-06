@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS, HttpErrorResponse } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { mergeMap, materialize, dematerialize, delay, map, mapTo } from 'rxjs/operators';
 import { IndexedDB } from 'ng-indexed-db';
 import { IProduct } from '../../models/product.interface';
@@ -50,6 +50,9 @@ export class BackendInterceptor implements HttpInterceptor {
                 let { url, method, body } = request;
                 switch (true) {
                     case url.endsWith(URLS.list) && method === METHODS.get: 
+                    
+                      // return of(new HttpResponse({ status: 404, body: { Error: 'Unknown method!' } }))
+                      // return throwError({error: "text"});
                         return this.indexedDbService.list(DB_KEY_PRODUCTS)
                             .pipe(
                                 map((body: IProduct[]) => new HttpResponse({ status: 200, body: body }))
