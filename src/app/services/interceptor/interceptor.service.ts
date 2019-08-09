@@ -52,15 +52,8 @@ export class BackendInterceptor implements HttpInterceptor {
                 switch (true) {
                     case url.endsWith(URLS.list) && method === METHODS.get: 
                     
-                      // return of(new HttpResponse({ status: 404, body: { Error: 'Unknown method!' } }))
-                      /* return new HttpErrorResponse({error: "sda",headers: request.headers,
-                      status: 500,
-                      statusText: 'Warning',
-                      url: request.url}); */
-                    //   return throw new Error("asdsad");
-                    //   return throwError( new ErrorResponse("asdsad"));
-                    //   return Observable.create(observer => observer.error(new HttpErrorResponse({status: 500})));
-                        return this.indexedDbService.list(DB_KEY_PRODUCTS)
+                      // return throwError( new Error("asdsad"));
+                      return this.indexedDbService.list(DB_KEY_PRODUCTS)
                             .pipe(
                                 map((body: IProduct[]) => new HttpResponse({ status: 200, body: body }))
                             )

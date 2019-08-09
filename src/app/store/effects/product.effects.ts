@@ -3,7 +3,7 @@ import { Observable, of, EMPTY } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { ProductActionTypes, ProductActions, LoadListSuccess, CreateSuccess, Delete, DeleteSuccess, Get, GetSuccess, GetNew, GetNewSuccess, Update, UpdateSuccess, Create, ErrorResponse } from '../actions/product.actions';
-import { map, mergeMap, catchError } from 'rxjs/operators';
+import { map, mergeMap, catchError} from 'rxjs/operators';
 import { ProductService } from '../../services/product/product.service'
 import { IProduct } from 'src/app/models/product.interface';
 import { State } from '../reducers/product.reducer';

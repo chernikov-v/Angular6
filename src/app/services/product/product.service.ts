@@ -25,11 +25,7 @@ export class ProductService {
 
 
     getProducts(): Observable<IProduct[]> {
-        return this.http.get<IProduct[]>(URLS.list).pipe(
-            catchError(error => {
-                return EMPTY;
-            })
-        )
+        return this.http.get<IProduct[]>(URLS.list)
     }
 
     getNewProduct(): Observable<IProduct> {
