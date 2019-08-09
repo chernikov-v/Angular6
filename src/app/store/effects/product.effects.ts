@@ -1,22 +1,24 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, EMPTY } from 'rxjs';
-import { Action } from '@ngrx/store';
+import { Action, Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { ProductActionTypes, ProductActions, LoadListSuccess, CreateSuccess, Delete, DeleteSuccess, Get, GetSuccess, GetNew, GetNewSuccess, Update, UpdateSuccess, Create } from '../actions/product.actions';
+import { ProductActionTypes, ProductActions, LoadListSuccess, CreateSuccess, Delete, DeleteSuccess, Get, GetSuccess, GetNew, GetNewSuccess, Update, UpdateSuccess, Create, ErrorResponse } from '../actions/product.actions';
 import { map, mergeMap, catchError } from 'rxjs/operators';
 import { ProductService } from '../../services/product/product.service'
 import { IProduct } from 'src/app/models/product.interface';
+import { State } from '../reducers/product.reducer';
 @Injectable()
 export class ProductEffects {
-    @Effect() load$/* : Observable<LoadListSuccess> */ = this.actions$
+    @Effect() load$: Observable<LoadListSuccess | ErrorResponse> = this.actions$
         .pipe(
             ofType(ProductActionTypes.LoadList),
             mergeMap(() => this.productService.getProducts().pipe(
-                map(products => new LoadListSuccess(products))
-            ),
-                // catchError(() => EMPTY)
+                map(products => new LoadListSuccess(products)),
+                catchError(err => {debugger;return of(new ErrorResponse(err))})
             )
-        );
+            // ,catchError(err => {debugger;return of(new ErrorResponse(err))})
+            )
+        )
     @Effect() delete$: Observable<DeleteSuccess> = this.actions$
         .pipe(
             ofType(ProductActionTypes.Delete),
@@ -61,6 +63,7 @@ export class ProductEffects {
 
     constructor(
         private actions$: Actions,
+        private store: Store<State>,
         private productService: ProductService
     ) { }
 }

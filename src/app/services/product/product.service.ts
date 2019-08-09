@@ -26,13 +26,13 @@ export class ProductService {
 
     getProducts(): Observable<IProduct[]> {
         return this.http.get<IProduct[]>(URLS.list).pipe(
-          catchError( error => {
-            return EMPTY;
-          })
+            catchError(error => {
+                return EMPTY;
+            })
         )
     }
 
-    getNewProduct(): Observable<IProduct>{
+    getNewProduct(): Observable<IProduct> {
         return this.http.get<IProduct>(URLS.getNew);
     }
 

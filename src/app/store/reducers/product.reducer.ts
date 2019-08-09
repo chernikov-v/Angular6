@@ -14,34 +14,34 @@ const initialState: State = {
 };
 
 export function productReducer(state = initialState, action: ProductActions): State {
+    console.log(action.type);
   switch (action.type) {
-
-
+    case ProductActionTypes.ErrorResponse:
+        // debugger;
+        return { ...state, loading: false };
     case ProductActionTypes.LoadList:
     case ProductActionTypes.Delete:
     case ProductActionTypes.Create:
     case ProductActionTypes.Update:
     case ProductActionTypes.Get:
     case ProductActionTypes.GetNew:
-        return Object.assign({}, state, { loading: true });
-
-
-
+        return {...state, loading: true };
+    
     case ProductActionTypes.CreateSuccess:
-      return Object.assign({}, state, { loading: false, selected: null, products: [...state.products, action.payload] });
+      return { ...state, loading: false, selected: null, products: [...state.products, action.payload] };
     case ProductActionTypes.UpdateSuccess:
-      return Object.assign({}, state, { loading: false, selected: null, products: state.products.map(product => product.id === (action.payload as IProduct).id ? action.payload : product) });
+      return {...state, loading: false, selected: null, products: state.products.map(product => product.id === (action.payload as IProduct).id ? action.payload : product) };
     case ProductActionTypes.DeleteSuccess:
-      return Object.assign({}, state, { loading: false, products: state.products.filter(product => product.id !== (action.payload as IProduct).id) });
+      return  { ...state, loading: false, products: state.products.filter(product => product.id !== (action.payload as IProduct).id) };
     case ProductActionTypes.GetSuccess:
     case ProductActionTypes.GetNewSuccess:
-      return Object.assign({}, state, { loading: false, selected: action.payload });
+      return  { ...state,  loading: false, selected: action.payload };
     case ProductActionTypes.LoadListSuccess:
-      return Object.assign({}, state, { loading: false, products: action.payload });
+      return  {...state, loading: false, products: action.payload };
 
 
-    default: {
+    default: 
       return state;
-    }
+    
   }
 }

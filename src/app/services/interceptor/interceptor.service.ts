@@ -5,6 +5,7 @@ import { mergeMap, materialize, dematerialize, delay, map, mapTo } from 'rxjs/op
 import { IndexedDB } from 'ng-indexed-db';
 import { IProduct } from '../../models/product.interface';
 import { copy, guid } from '../utils';
+import { ErrorResponse } from 'src/app/store/actions/product.actions';
 
 
 
@@ -52,7 +53,13 @@ export class BackendInterceptor implements HttpInterceptor {
                     case url.endsWith(URLS.list) && method === METHODS.get: 
                     
                       // return of(new HttpResponse({ status: 404, body: { Error: 'Unknown method!' } }))
-                      // return throwError({error: "text"});
+                      /* return new HttpErrorResponse({error: "sda",headers: request.headers,
+                      status: 500,
+                      statusText: 'Warning',
+                      url: request.url}); */
+                    //   return throw new Error("asdsad");
+                    //   return throwError( new ErrorResponse("asdsad"));
+                    //   return Observable.create(observer => observer.error(new HttpErrorResponse({status: 500})));
                         return this.indexedDbService.list(DB_KEY_PRODUCTS)
                             .pipe(
                                 map((body: IProduct[]) => new HttpResponse({ status: 200, body: body }))

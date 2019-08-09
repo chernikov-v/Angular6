@@ -15,14 +15,14 @@ export enum ProductActionTypes {
     GetNewSuccess = '[Product] GetNewSuccess',
     LoadList = '[Product] LoadList',
     LoadListSuccess = '[Product] LoadListSuccess',
-    Error = "[Product] Error"
+    ErrorResponse = "[Product] ErrorResponse"
 };
 
 
-export class Error implements Action {
-  readonly type = ProductActionTypes.Error;
+export class ErrorResponse implements Action {
+  readonly type = ProductActionTypes.ErrorResponse;
 
-  constructor(public payload: string) { }
+  constructor(public payload?: string) { }
 }
 
 export class Create implements Action {
@@ -107,4 +107,4 @@ export type ProductActions
                         | GetNewSuccess
                         | LoadList
                         | LoadListSuccess
-                        | Error;
+                        | ErrorResponse;
