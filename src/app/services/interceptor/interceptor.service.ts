@@ -6,6 +6,7 @@ import { IndexedDB } from 'ng-indexed-db';
 import { IProduct } from '../../models/product.interface';
 import { copy, guid } from '../utils';
 import { ErrorResponse } from 'src/app/store/actions/product.actions';
+import { ToastrService } from 'ngx-toastr';
 
 
 
@@ -42,7 +43,16 @@ export enum METHODS {
 })
 export class BackendInterceptor implements HttpInterceptor {
 
-    constructor(private indexedDbService: IndexedDB) { }
+    constructor(
+        private indexedDbService: IndexedDB,
+        private toastr: ToastrService) { }
+
+
+    throwError() {
+        setTimeout(() => this.toastr.error('Hello world!', 'Toastr fun!'));
+        return throwError(new Error());
+    }
+
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
@@ -50,17 +60,16 @@ export class BackendInterceptor implements HttpInterceptor {
             .pipe(mergeMap(() => {
                 let { url, method, body } = request;
                 switch (true) {
-                    case url.endsWith(URLS.list) && method === METHODS.get: 
-                    
-                      // return throwError( new Error("asdsad"));
-                      return this.indexedDbService.list(DB_KEY_PRODUCTS)
+                    case url.endsWith(URLS.list) && method === METHODS.get:
+
+                        return this.indexedDbService.list(DB_KEY_PRODUCTS)
                             .pipe(
                                 map((body: IProduct[]) => new HttpResponse({ status: 200, body: body }))
                             )
 
-                    case url.endsWith(URLS.getNew) && method === METHODS.get: 
+                    case url.endsWith(URLS.getNew) && method === METHODS.get:
                         return of(new HttpResponse({ status: 200, body: DEFAULT_PRODUCT }));
-                    
+
                     case url.endsWith(URLS.create) && method === METHODS.post: {
                         let new_product = Object.assign(copy(body), {
                             id: guid(),
@@ -70,12 +79,6 @@ export class BackendInterceptor implements HttpInterceptor {
                             map(() => new HttpResponse({ status: 200, body: new_product }))
                         );
                     }
-
-                    case url.endsWith(URLS.get) && method === METHODS.post: 
-                        return this.indexedDbService.get(DB_KEY_PRODUCTS, body).pipe(
-                            map(response => new HttpResponse({ status: 200, body: response }))
-                        );
-
                     case url.endsWith(URLS.update) && method === METHODS.post:
                         if (body.id) {
                             return this.indexedDbService.update(DB_KEY_PRODUCTS, body).pipe(
@@ -84,7 +87,14 @@ export class BackendInterceptor implements HttpInterceptor {
                         } else {
                             return of(new HttpErrorResponse({ status: 500, error: 'Unknown instance' }))
                         }
-                    
+
+                    case url.endsWith(URLS.get) && method === METHODS.post:
+                        return this.indexedDbService.get(DB_KEY_PRODUCTS, body).pipe(
+                            map(response => new HttpResponse({ status: 200, body: response }))
+                        );
+
+
+
                     case url.endsWith(URLS.delete) && method === METHODS.post:
                         return this.indexedDbService.delete(DB_KEY_PRODUCTS, body.id).pipe(
                             map(response => new HttpResponse({ status: 200, body: body }))

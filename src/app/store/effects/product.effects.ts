@@ -14,9 +14,8 @@ export class ProductEffects {
             ofType(ProductActionTypes.LoadList),
             mergeMap(() => this.productService.getProducts().pipe(
                 map(products => new LoadListSuccess(products)),
-                catchError(err => {debugger;return of(new ErrorResponse(err))})
+                catchError(err => of(new ErrorResponse(err)))
             )
-            // ,catchError(err => {debugger;return of(new ErrorResponse(err))})
             )
         )
     @Effect() delete$: Observable<DeleteSuccess> = this.actions$
@@ -67,13 +66,3 @@ export class ProductEffects {
         private productService: ProductService
     ) { }
 }
-
-/* ffectName$ = createEffect(() => this.actions$.pipe(
-    ofType(FeatureActions.action),
-    operator(() =>
-        apiSource.pipe(
-            map(data => FeatureActions.actionSuccess({ data })),
-            catchError(error => of(FeatureActions.actionFailure({ error }))))
-        )
-    )
-); */

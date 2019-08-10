@@ -19,13 +19,10 @@ import { productReducer } from './store/reducers/product.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ProductEffects } from './store/effects/product.effects';
 import { SpinnerComponent } from './components/spinner/spinner.component';
-// import {}
 
-// import { StoreModule } from '@ngrx/store';
-// import { reducers, metaReducers } from './store/reducers';
-// import { EffectsModule } from '@ngrx/effects';
-// import { AppEffects } from './store/effects/app.effects';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { ToastrModule } from 'ngx-toastr';
 @NgModule({
    declarations: [
       AppComponent,
@@ -50,7 +47,15 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
       ]),
       HttpClientModule,
       StoreModule.forRoot({ productsStore: productReducer }),
-      EffectsModule.forRoot([ProductEffects])
+      EffectsModule.forRoot([ProductEffects]),
+
+      BrowserAnimationsModule,
+      ToastrModule.forRoot({
+        timeOut: 10000,
+        closeButton: true,
+        positionClass: 'toast-top-center',
+        preventDuplicates: true,
+      })
    ],
    providers: [BackendProvider],
    bootstrap: [
