@@ -3,10 +3,11 @@ import { HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTT
 import { Observable, of, throwError } from 'rxjs';
 import { mergeMap, materialize, dematerialize, delay, map, mapTo } from 'rxjs/operators';
 import { IndexedDB } from 'ng-indexed-db';
-import { IProduct } from '../../models/product.interface';
+import { IProduct, IProductSchema } from '../../models/product.interface';
 import { copy, guid } from '../utils';
-import { ErrorResponse } from 'src/app/store/actions/product.actions';
 import { ToastrService } from 'ngx-toastr';
+
+import * as Ajv from 'ajv';
 
 
 
@@ -42,14 +43,24 @@ export enum METHODS {
     providedIn: 'root'
 })
 export class BackendInterceptor implements HttpInterceptor {
-
+    private ajv = new Ajv();
     constructor(
         private indexedDbService: IndexedDB,
-        private toastr: ToastrService) { }
+        private toastr: ToastrService) {
 
 
-    throwError() {
-        setTimeout(() => this.toastr.error('Hello world!', 'Toastr fun!'));
+    }
+
+    copyObject(obj) {
+        return obj ? JSON.parse(JSON.stringify(obj)) : obj;
+    }
+
+
+    throwError(err?) {
+        err && console.error(err, this.ajv.errors);
+        setTimeout(() => this.toastr.error(this.ajv.errorsText(), "DATA VALIDATION ERROR!", {
+            timeOut: 10000
+        }));
         return throwError(new Error());
     }
 
@@ -75,18 +86,30 @@ export class BackendInterceptor implements HttpInterceptor {
                             id: guid(),
                             createdAt: new Date,
                         });
+
+                        try {
+                            if (!this.ajv.validate(IProductSchema, this.copyObject(new_product))) throw new Error(this.ajv.errorsText());
+                        } catch (err) {
+                            return this.throwError(err);
+                        }
+
                         return this.indexedDbService.create(DB_KEY_PRODUCTS, new_product).pipe(
                             map(() => new HttpResponse({ status: 200, body: new_product }))
                         );
                     }
                     case url.endsWith(URLS.update) && method === METHODS.post:
-                        if (body.id) {
-                            return this.indexedDbService.update(DB_KEY_PRODUCTS, body).pipe(
-                                map(response => new HttpResponse({ status: 200, body: response }))
-                            );
-                        } else {
-                            return of(new HttpErrorResponse({ status: 500, error: 'Unknown instance' }))
+
+
+                        try {
+                            if (!this.ajv.validate(IProductSchema, this.copyObject(body))) throw new Error(this.ajv.errorsText());
+                        } catch (err) {
+                            return this.throwError(err);
                         }
+
+                        return this.indexedDbService.update(DB_KEY_PRODUCTS, body).pipe(
+                            map(response => new HttpResponse({ status: 200, body: response }))
+                        );
+
 
                     case url.endsWith(URLS.get) && method === METHODS.post:
                         return this.indexedDbService.get(DB_KEY_PRODUCTS, body).pipe(

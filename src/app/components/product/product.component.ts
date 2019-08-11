@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TYPES } from '../../services/product/product.service';
-import { IProduct } from '../../models/product.interface';
+import { IProduct, TYPES} from '../../models/product.interface';
 import { file2base64 } from '../../services/utils';
 import { takeUntil, map, filter } from 'rxjs/operators';
 import { Subject } from 'rxjs';

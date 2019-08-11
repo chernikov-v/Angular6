@@ -1,25 +1,16 @@
 import { Injectable } from '@angular/core';
 import { IProduct } from '../../models/product.interface';
 import { IndexedDB } from 'ng-indexed-db';
-import { Observable, EMPTY } from 'rxjs';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 import { URLS } from '../interceptor/interceptor.service';
-import { catchError } from 'rxjs/operators';
-export enum TYPES {
-    SMART = 'smart',
-    WATCH = 'watch',
-    TRACKER = 'tracker'
-}
-
-
-
 @Injectable({
     providedIn: 'root'
 })
 export class ProductService {
 
-    constructor(private indexedDbService: IndexedDB, private http: HttpClient) {
+    constructor(private http: HttpClient) {
 
     }
 

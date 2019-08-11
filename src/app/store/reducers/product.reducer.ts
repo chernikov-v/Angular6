@@ -17,8 +17,8 @@ export function productReducer(state = initialState, action: ProductActions): St
     console.log(action.type);
   switch (action.type) {
     case ProductActionTypes.ErrorResponse:
-        // debugger;
         return { ...state, loading: false };
+        
     case ProductActionTypes.LoadList:
     case ProductActionTypes.Delete:
     case ProductActionTypes.Create:

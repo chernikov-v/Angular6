@@ -26,19 +26,21 @@ export class ProductEffects {
             )
             )
         );
-    @Effect() create$: Observable<CreateSuccess> = this.actions$
+    @Effect() create$: Observable<CreateSuccess | ErrorResponse> = this.actions$
         .pipe(
             ofType(ProductActionTypes.Create),
             mergeMap((action: Create) => this.productService.addProduct(action.payload).pipe(
-                map((product: IProduct) => new CreateSuccess(product))
+                map((product: IProduct) => new CreateSuccess(product)),
+                catchError(err => of(new ErrorResponse(err)))
             )
             )
         );
-    @Effect() update$: Observable<UpdateSuccess> = this.actions$
+    @Effect() update$: Observable<UpdateSuccess | ErrorResponse> = this.actions$
         .pipe(
             ofType(ProductActionTypes.Update),
             mergeMap((action: Update) => this.productService.updateProduct(action.payload).pipe(
-                map((product: IProduct) => new UpdateSuccess(product))
+                map((product: IProduct) => new UpdateSuccess(product)),
+                catchError(err => of(new ErrorResponse(err)))
             )
             )
         );
