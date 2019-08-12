@@ -6,11 +6,11 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 
 const routes: Routes = [
 
-  { path: '', component: ListComponent },
-  { path: 'product/create', component: ProductComponent },
-  { path: 'product/:id', component: ProductComponent },
-  { path: '**', component: PageNotFoundComponent }
+  { path: '', pathMatch: 'prefix', component: ListComponent },
+  { path: 'product/create', pathMatch: 'prefix', component: ProductComponent },
+  { path: 'product/:id', pathMatch: 'prefix', component: ProductComponent },
+  { path: '**', pathMatch: 'prefix', component: PageNotFoundComponent }
 
 ];
 
-export const MyRouteRoutes = RouterModule.forRoot(routes/* , { useHash:true } */);
+export const MyRouteRoutes = RouterModule.forRoot(routes, {/*  useHash:true  */});
