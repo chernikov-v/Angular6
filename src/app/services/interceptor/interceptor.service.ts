@@ -13,14 +13,22 @@ import * as Ajv from 'ajv';
 
 let DB_KEY_PRODUCTS = 'products';
 
-const DEFAULT_PRODUCT = {
-    id: null,
-    image: null,
-    title: null,
-    description: null,
-    category: null,
-    createdAt: null,
-    qty: 1
+class DefaultProduct implements IProduct {
+    id = null
+    image = null
+    title = null
+    description = null
+    category = null
+    createdAt = null
+    qty = 1
+
+    static setParamsOnCreate(product: IProduct) {
+      return {
+        ...product,
+        id: guid(),
+        createdAt: new Date,
+      }
+    }
 }
 
 export enum URLS {
@@ -51,11 +59,6 @@ export class BackendInterceptor implements HttpInterceptor {
 
     }
 
-    copyObject(obj) {
-        return obj ? JSON.parse(JSON.stringify(obj)) : obj;
-    }
-
-
     throwError(err?) {
         err && console.error(err, this.ajv.errors);
         setTimeout(() => this.toastr.error(this.ajv.errorsText(), "DATA VALIDATION ERROR!", {
@@ -79,16 +82,18 @@ export class BackendInterceptor implements HttpInterceptor {
                             )
 
                     case url.endsWith(URLS.getNew) && method === METHODS.get:
-                        return of(new HttpResponse({ status: 200, body: DEFAULT_PRODUCT }));
+                        return of(new HttpResponse({ status: 200, body: new DefaultProduct }));
 
                     case url.endsWith(URLS.create) && method === METHODS.post: {
-                        let new_product = Object.assign(copy(body), {
+                        /* let new_product = Object.assign(copy(body), {
                             id: guid(),
                             createdAt: new Date,
-                        });
+                        }); */
 
+                        let new_product = DefaultProduct.setParamsOnCreate(body);
+                        
                         try {
-                            if (!this.ajv.validate(IProductSchema, this.copyObject(new_product))) throw new Error(this.ajv.errorsText());
+                            if (!this.ajv.validate(IProductSchema, copy(new_product))) throw new Error(this.ajv.errorsText());
                         } catch (err) {
                             return this.throwError(err);
                         }
@@ -101,7 +106,7 @@ export class BackendInterceptor implements HttpInterceptor {
 
 
                         try {
-                            if (!this.ajv.validate(IProductSchema, this.copyObject(body))) throw new Error(this.ajv.errorsText());
+                            if (!this.ajv.validate(IProductSchema, copy(body))) throw new Error(this.ajv.errorsText());
                         } catch (err) {
                             return this.throwError(err);
                         }
