@@ -13,4 +13,4 @@ const routes: Routes = [
 
 ];
 
-export const MyRouteRoutes = RouterModule.forRoot(routes, {/*  useHash:true  */});
+export const MyRouteRoutes = RouterModule.forRoot(routes, { useHash:true });
